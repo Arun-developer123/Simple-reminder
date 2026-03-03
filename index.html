@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simple Calendar & Reminders</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1320;--accent:#06b6d4;--muted:#94a3b8;--white:#e6eef6}
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071023 0%, #071827 100%);color:var(--white)}
+    .wrap{max-width:980px;margin:18px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    h1{font-size:20px;margin:0}
+    .controls{display:flex;gap:8px;align-items:center}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--white);padding:8px 10px;border-radius:8px;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#60a5fa);border:none;color:#042029}
+    .calendar{display:grid;grid-template-columns:1fr 320px;gap:16px}
+    .month-card{background:rgba(255,255,255,0.02);padding:14px;border-radius:12px}
+    .month-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;color:var(--muted);font-size:12px}
+    .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .day{min-height:80px;background:rgba(255,255,255,0.01);padding:6px;border-radius:8px;position:relative;overflow:hidden}
+    .day .num{font-size:13px;margin-bottom:6px}
+    .day .badge{display:inline-block;background:var(--accent);color:#012; padding:2px 6px;border-radius:12px;font-size:11px}
+    .day.other{opacity:0.45}
+    .day.today{outline:2px solid rgba(96,165,250,0.12)}
+    .events-list{display:flex;flex-direction:column;gap:8px}
+    .event-item{background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;font-size:13px}
+    .side{background:rgba(255,255,255,0.02);padding:12px;border-radius:12px}
+    .small{font-size:12px;color:var(--muted)}
+    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:50}
+    .modal-card{width:420px;background:#041028;padding:16px;border-radius:10px}
+    label{display:block;margin-bottom:6px;color:var(--muted);font-size:13px}
+    input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white);margin-bottom:10px}
+    .row{display:flex;gap:8px}
+    .flex-1{flex:1}
+    footer{margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
+    .topbar{display:flex;gap:8px;align-items:center}
+    a.link{color:var(--accent);text-decoration:none}
+    @media (max-width:720px){.calendar{grid-template-columns:1fr;}.modal-card{width:92%}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Simple Calendar & Reminders</h1>
+      <div class="small">Click a date to add events. Works offline (localStorage). Notifications while page is open.</div>
+    </div>
+    <div class="controls topbar">
+      <button id="exportJson">Export JSON</button>
+      <button id="importJson">Import JSON</button>
+      <button id="downloadIcs">Download .ics</button>
+      <button id="askNotify" class="btn-primary">Enable Notifications</button>
+    </div>
+  </header>
+
+  <div class="calendar">
+    <div class="month-card">
+      <div class="month-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          <button id="prev">◀</button>
+          <div id="monthLabel" style="min-width:170px;text-align:center;font-weight:600"></div>
+          <button id="next">▶</button>
+        </div>
+        <div class="small">Today: <span id="todayLabel"></span></div>
+      </div>
+
+      <div class="weekdays" id="weekdays"></div>
+      <div class="days" id="days"></div>
+    </div>
+
+    <aside class="side">
+      <h3 id="selectedDateLabel">Select a date</h3>
+      <div class="small">Events for the selected date:</div>
+      <div id="events" class="events-list" style="margin-top:10px"></div>
+      <div style="margin-top:12px">
+        <button id="addEventBtn" class="btn-primary">Add event</button>
+        <button id="clearAll" style="margin-left:6px">Clear all</button>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    Built for quick deploy — paste the file into a GitHub repo (index.html) and deploy on Vercel (static). Need sync or push reminders? I can upgrade it.
+  </footer>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal" style="display:none">
+  <div class="modal-card">
+    <h3 id="modalTitle">Add event</h3>
+    <label>Title</label>
+    <input id="evTitle" placeholder="e.g., Pay rent" />
+    <label>Time (optional — 24h)</label>
+    <input id="evTime" placeholder="HH:MM, e.g., 14:30" />
+    <label>Notes</label>
+    <textarea id="evNotes" rows="3" placeholder="Optional details"></textarea>
+    <div class="row">
+      <div class="flex-1">
+        <label>Remind before (minutes)</label>
+        <select id="evBefore">
+          <option value="0">At time</option>
+          <option value="5">5 minutes before</option>
+          <option value="15">15 minutes before</option>
+          <option value="30">30 minutes before</option>
+          <option value="60">1 hour before</option>
+        </select>
+      </div>
+      <div style="min-width:120px">
+        <label>Color</label>
+        <input id="evColor" type="color" value="#06b6d4" />
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button id="cancelModal">Cancel</button>
+      <button id="saveEvent" class="btn-primary">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Simple calendar + reminders (localStorage)
+const LO_KEY = 'simple_calendar_events_v1';
+const NOTIF_KEY = 'simple_calendar_notified_v1';
+let events = JSON.parse(localStorage.getItem(LO_KEY) || '{}');
+let notified = JSON.parse(localStorage.getItem(NOTIF_KEY) || '{}');
+let current = new Date();
+let selectedDate = toISODate(current);
+
+const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+// DOM
+const monthLabel = document.getElementById('monthLabel');
+const todayLabel = document.getElementById('todayLabel');
+const daysEl = document.getElementById('days');
+const weekdaysEl = document.getElementById('weekdays');
+const selectedDateLabel = document.getElementById('selectedDateLabel');
+const eventsEl = document.getElementById('events');
+const addEventBtn = document.getElementById('addEventBtn');
+const modal = document.getElementById('modal');
+const evTitle = document.getElementById('evTitle');
+const evTime = document.getElementById('evTime');
+const evNotes = document.getElementById('evNotes');
+const evBefore = document.getElementById('evBefore');
+const evColor = document.getElementById('evColor');
+const cancelModal = document.getElementById('cancelModal');
+const saveEvent = document.getElementById('saveEvent');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const exportJson = document.getElementById('exportJson');
+const importJson = document.getElementById('importJson');
+const clearAll = document.getElementById('clearAll');
+const askNotify = document.getElementById('askNotify');
+const downloadIcs = document.getElementById('downloadIcs');
+
+// init
+renderWeekdays();
+renderCalendar();
+todayLabel.textContent = toISODate(new Date());
+updateSelectedDate(selectedDate);
+
+// events
+addEventBtn.onclick = ()=>openModal();
+cancelModal.onclick = ()=>closeModal();
+prevBtn.onclick = ()=>{ current.setMonth(current.getMonth()-1); renderCalendar(); };
+nextBtn.onclick = ()=>{ current.setMonth(current.getMonth()+1); renderCalendar(); };
+exportJson.onclick = ()=>downloadJSON();
+importJson.onclick = ()=>importJSON();
+clearAll.onclick = ()=>{ if(confirm('Clear all events?')){ events={}; localStorage.setItem(LO_KEY, JSON.stringify(events)); renderCalendar(); updateSelectedDate(selectedDate); }};
+askNotify.onclick = ()=>{ if('Notification' in window) Notification.requestPermission().then(p=>alert('Permission: '+p)); else alert('Notifications not supported'); };
+downloadIcs.onclick = ()=>downloadICSAll();
+
+saveEvent.onclick = ()=>{
+  const title = evTitle.value.trim();
+  if(!title){ alert('Title required'); return; }
+  const time = evTime.value.trim();
+  const notes = evNotes.value.trim();
+  const before = parseInt(evBefore.value||0);
+  const color = evColor.value||'#06b6d4';
+  const ev = {id:Date.now(),title,time,notes,before,color,created:Date.now()};
+  events[selectedDate] = events[selectedDate] || [];
+  events[selectedDate].push(ev);
+  localStorage.setItem(LO_KEY, JSON.stringify(events));
+  closeModal();
+  renderCalendar();
+  updateSelectedDate(selectedDate);
+}
+
+function openModal(edit){
+  modal.style.display='flex';
+  evTitle.value = '';
+  evTime.value = '';
+  evNotes.value = '';
+  evBefore.value = '0';
+  evColor.value = '#06b6d4';
+}
+function closeModal(){ modal.style.display='none'; }
+
+function renderWeekdays(){ weekdaysEl.innerHTML = weekdays.map(w=>`<div>${w}</div>`).join(''); }
+
+function renderCalendar(){
+  const year = current.getFullYear();
+  const month = current.getMonth();
+  monthLabel.textContent = `${monthNames[month]} ${year}`;
+
+  const first = new Date(year, month, 1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const prevDays = new Date(year, month, 0).getDate();
+
+  const cells = [];
+  // leading
+  for(let i=startDay-1;i>=0;i--){ const d = prevDays - i; const date = new Date(year,month-1,d); cells.push({date,other:true}); }
+  for(let d=1; d<=daysInMonth; d++){ cells.push({date:new Date(year,month,d),other:false}); }
+  // trailing to fill rows
+  while(cells.length %7 !==0){ const d = cells.length - (startDay + daysInMonth) +1; const date = new Date(year, month+1, d); cells.push({date,other:true}); }
+
+  daysEl.innerHTML = cells.map(c=>{
+    const iso = toISODate(c.date);
+    const isToday = iso === toISODate(new Date());
+    const evCount = (events[iso] || []).length;
+    return `<div class="day ${c.other? 'other':''} ${isToday? 'today':''}" data-date="${iso}">
+      <div class="num">${c.date.getDate()} ${evCount?('<span class="badge">'+evCount+'</span>'):''}</div>
+      <div style="position:absolute;left:6px;bottom:6px;right:6px;font-size:11px;max-height:46px;overflow:hidden">${(events[iso]||[]).slice(0,3).map(ev=>`<div style="background:${ev.color};padding:4px;border-radius:6px;margin-bottom:4px;color:#002">${escapeHtml(ev.title)}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  // add click listeners
+  Array.from(daysEl.querySelectorAll('.day')).forEach(el=> el.onclick = ()=>{ selectedDate = el.dataset.date; updateSelectedDate(selectedDate); });
+}
+
+function updateSelectedDate(iso){ selectedDate = iso; selectedDateLabel.textContent = formatDisplay(iso); renderEventList(iso); }
+
+function renderEventList(iso){ const list = events[iso]||[]; if(!list.length) eventsEl.innerHTML = '<div class="small">No events</div>'; else eventsEl.innerHTML = list.map(ev=>`<div class="event-item" data-id="${ev.id}"><div style="display:flex;justify-content:space-between;align-items:center"><strong>${escapeHtml(ev.title)}</strong><div class="small">${ev.time||''}</div></div><div class="small">${escapeHtml(ev.notes||'')}</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick='editEvent(${ev.id})'>Edit</button><button onclick='deleteEvent(${ev.id})'>Delete</button><button onclick='downloadEvent(${ev.id})'>.ics</button></div></div>`).join(''); }
+
+window.editEvent = function(id){ const list = events[selectedDate]||[]; const ev = list.find(x=>x.id===id); if(!ev) return; modal.style.display='flex'; evTitle.value=ev.title; evTime.value=ev.time; evNotes.value=ev.notes; evBefore.value = ev.before||'0'; evColor.value = ev.color||'#06b6d4'; saveEvent.onclick = ()=>{ ev.title = evTitle.value.trim(); ev.time = evTime.value.trim(); ev.notes = evNotes.value.trim(); ev.before = parseInt(evBefore.value||0); ev.color = evColor.value; localStorage.setItem(LO_KEY, JSON.stringify(events)); closeModal(); renderCalendar(); updateSelectedDate(selectedDate); saveEvent.onclick = defaultSave; }; }
+window.deleteEvent = function(id){ if(!confirm('Delete this event?')) return; events[selectedDate] = (events[selectedDate]||[]).filter(e=>e.id!==id); if(events[selectedDate].length===0) delete events[selectedDate]; localStorage.setItem(LO_KEY, JSON.stringify(events)); renderCalendar(); updateSelectedDate(selectedDate); }
+window.downloadEvent = function(id){ const ev = (events[selectedDate]||[]).find(x=>x.id===id); if(!ev) return; const ics = eventToICS(selectedDate, ev); const blob = new Blob([ics],{type:'text/calendar'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download = `${sanitizeFile(selectedDate+'_'+ev.title)}.ics`; a.click(); URL.revokeObjectURL(url); }
+
+function toISODate(d){ if(typeof d === 'string') return d; const y=d.getFullYear(); const m=('0'+(d.getMonth()+1)).slice(-2); const dd=('0'+d.getDate()).slice(-2); return `${y}-${m}-${dd}`; }
+function formatDisplay(iso){ const [y,m,day] = iso.split('-'); const dt = new Date(`${iso}T00:00:00`); return `${dt.getDate()} ${monthNames[dt.getMonth()]} ${dt.getFullYear()}`; }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function sanitizeFile(s){ return s.replace(/[^a-z0-9-_\.]/gi,'_').slice(0,120); }
+
+// Reminder checker (runs every 30s)
+function checkReminders(){ const now = new Date(); const isoToday = toISODate(now);
+  // check today and next day in case of cross-midnight
+  [isoToday].forEach(iso=>{
+    (events[iso]||[]).forEach(ev=>{
+      if(!ev.time) return; // skip all-day
+      const [hh,mm] = ev.time.split(':').map(x=>parseInt(x)); if(isNaN(hh)) return;
+      const eventDate = new Date(iso+'T'+pad(hh)+':'+pad(mm)+':00');
+      const remindAt = new Date(eventDate.getTime() - ((ev.before||0)*60000));
+      const key = ev.id + '_' + iso;
+      if(now >= remindAt && !notified[key]){
+        // notify
+        fireNotification(ev.title, ev.notes || (ev.time? ev.time : '')); notified[key]=true; localStorage.setItem(NOTIF_KEY, JSON.stringify(notified));
+      }
+    });
+  });
+}
+function pad(n){ return ('0'+n).slice(-2); }
+function fireNotification(title, body){ if('Notification' in window && Notification.permission === 'granted'){
+  try{ new Notification(title, {body}); }catch(e){ alert(title + '\n' + body); }
+ } else { alert(title + '\n' + body); } }
+setInterval(checkReminders, 30*1000);
+checkReminders();
+
+// JSON export/import
+function downloadJSON(){ const b = new Blob([JSON.stringify(events,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='calendar-events.json'; a.click(); URL.revokeObjectURL(a.href); }
+function importJSON(){ const inp = document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange = e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload = ()=>{ try{ const parsed = JSON.parse(r.result); events = parsed || {}; localStorage.setItem(LO_KEY, JSON.stringify(events)); renderCalendar(); updateSelectedDate(selectedDate); alert('Imported'); }catch(err){ alert('Invalid JSON'); }}; r.readAsText(f); }; inp.click(); }
+
+// ICS export for whole calendar (simple)
+function eventToICS(iso, ev){ const dt = iso.replace(/-/g,'') + (ev.time? ev.time.replace(':','')+'00' : '000000'); const uid = (ev.id||Date.now()) + '@local'; const lines = [
+  'BEGIN:VCALENDAR',
+  'VERSION:2.0',
+  'PRODID:-//simple-calendar//EN',
+  'BEGIN:VEVENT',
+  `UID:${uid}`,
+  `DTSTAMP:${formatICS(new Date())}`,
+  ev.time? `DTSTART:${dt}` : `DTSTART;VALUE=DATE:${iso.replace(/-/g,'')}` ,
+  `SUMMARY:${ev.title}`,
+  `DESCRIPTION:${ev.notes||''}`,
+  'END:VEVENT',
+  'END:VCALENDAR'
+];
+return lines.join('\r\n'); }
+function formatICS(d){ const y=d.getFullYear(); const m=pad(d.getMonth()+1); const day=pad(d.getDate()); const hh=pad(d.getHours()); const mm=pad(d.getMinutes()); const ss=pad(d.getSeconds()); return `${y}${m}${day}T${hh}${mm}${ss}Z`; }
+function downloadICSAll(){ const all = [];
+  Object.keys(events).forEach(iso=>{ events[iso].forEach(ev=> all.push(eventToICS(iso,ev))); });
+  if(!all.length){ alert('No events'); return; }
+  const blob = new Blob([all.join('\n')],{type:'text/calendar'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='events.ics'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+// small helpers
+function defaultSave(){ const title = evTitle.value.trim(); if(!title){ alert('Title required'); return; }
+  const time = evTime.value.trim(); const notes = evNotes.value.trim(); const before = parseInt(evBefore.value||0); const color = evColor.value||'#06b6d4'; const ev = {id:Date.now(),title,time,notes,before,color,created:Date.now()}; events[selectedDate] = events[selectedDate] || []; events[selectedDate].push(ev); localStorage.setItem(LO_KEY, JSON.stringify(events)); closeModal(); renderCalendar(); updateSelectedDate(selectedDate); }
+saveEvent.onclick = defaultSave;
+
+// allow clicking outside modal to close
+modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+
+// keyboard shortcuts
+document.addEventListener('keydown', e=>{ if(e.key==='n'){ openModal(); } if(e.key==='Escape'){ closeModal(); } });
+
+</script>
+</body>
+  </html>
+  

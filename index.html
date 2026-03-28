@@ -112,13 +112,13 @@
   <!-- GU Assistant Pro Clean Widget -->
 
 <style>
-  /* Hide any label/text */
+  /* Hide label/text */
   .gu-widget-label,
   [class*="label"] {
     display: none !important;
   }
 
-  /* Make button perfectly round */
+  /* Remove button background completely */
   .gu-widget-button,
   [class*="button"] {
     width: 60px !important;
@@ -126,21 +126,26 @@
     border-radius: 50% !important;
     overflow: hidden !important;
     padding: 0 !important;
+    
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 
-  /* Ensure GIF fills properly */
+  /* Show only GIF properly */
   .gu-widget-button img,
   [class*="button"] img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
+    border-radius: 50% !important;
   }
 </style>
 
 <script src="https://gu-assistant.vercel.app/widget.js"
         data-src="https://gu-assistant.vercel.app"
         data-avatar="https://gu-assistant.vercel.app/avatar.gif"
-        data-accent="#6f3df0"
+        data-accent="transparent"
         data-label=""
         async>
 </script>

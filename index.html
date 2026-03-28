@@ -109,11 +109,57 @@
     }, 7000);
   </script>
 
-  <script src="https://gu-assistant.vercel.app/widget.js"
-          data-src="https://gu-assistant.vercel.app"
-          data-avatar="https://gu-assistant.vercel.app/avatar.gif"
-          data-accent="#6f3df0"
-          data-label="GU Assistant"
-          async></script>
+  <!-- GU Assistant Pro Clean Widget -->
+
+<style>
+  /* Hide label completely */
+  .gu-widget-label,
+  [class*="label"] {
+    display: none !important;
+  }
+
+  /* Main floating button */
+  .gu-widget-button,
+  [class*="button"] {
+    border-radius: 50% !important;
+    width: 64px !important;
+    height: 64px !important;
+    overflow: hidden !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Avatar image */
+  .gu-widget-button img,
+  [class*="button"] img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Hover effect (premium feel) */
+  .gu-widget-button:hover,
+  [class*="button"]:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35) !important;
+  }
+
+  /* Mobile optimization */
+  @media (max-width: 768px) {
+    .gu-widget-button,
+    [class*="button"] {
+      width: 58px !important;
+      height: 58px !important;
+    }
+  }
+</style>
+
+<script src="https://gu-assistant.vercel.app/widget.js"
+        data-src="https://gu-assistant.vercel.app"
+        data-avatar="https://gu-assistant.vercel.app/avatar.gif"
+        data-accent="#6f3df0"
+        data-label=""
+        async>
+</script>
 </body>
 </html>

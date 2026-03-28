@@ -118,7 +118,7 @@
     display: none !important;
   }
 
-  /* Remove button background completely */
+  /* Keep button but remove purple background */
   .gu-widget-button,
   [class*="button"] {
     width: 60px !important;
@@ -126,26 +126,28 @@
     border-radius: 50% !important;
     overflow: hidden !important;
     padding: 0 !important;
-    
-    background: transparent !important;
+
+    background-color: transparent !important;
+    background: none !important;
     box-shadow: none !important;
     border: none !important;
   }
 
-  /* Show only GIF properly */
+  /* Make GIF look like actual button */
   .gu-widget-button img,
   [class*="button"] img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     border-radius: 50% !important;
+    display: block !important;
   }
 </style>
 
 <script src="https://gu-assistant.vercel.app/widget.js"
         data-src="https://gu-assistant.vercel.app"
         data-avatar="https://gu-assistant.vercel.app/avatar.gif"
-        data-accent="transparent"
+        data-accent="#6f3df0"
         data-label=""
         async>
 </script>

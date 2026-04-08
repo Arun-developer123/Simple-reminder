@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gurugram University</title>
-  <meta name="description" content="Gurugram University portal view." />
+  <title>DGC Gurugram</title>
+  <meta name="description" content="DGC Gurugram portal view." />
   <style>
     html, body {
       margin: 0;
@@ -31,7 +31,6 @@
       background: #fff;
     }
 
-    /* Optional tiny loading layer */
     .loading {
       position: fixed;
       inset: 0;
@@ -77,21 +76,21 @@
     <div id="loading" class="loading">
       <div class="loading-card">
         <div class="spinner"></div>
-        <div>Loading Gurugram University…</div>
+        <div>Loading DGC Gurugram…</div>
       </div>
     </div>
 
     <iframe
-      id="guFrame"
-      src="https://gurugramuniversity.ac.in"
-      title="Gurugram University"
+      id="dgcFrame"
+      src="http://dgcgurugram.ac.in"
+      title="DGC Gurugram"
       referrerpolicy="no-referrer"
     ></iframe>
   </div>
 
   <script>
     const loading = document.getElementById('loading');
-    const frame = document.getElementById('guFrame');
+    const frame = document.getElementById('dgcFrame');
 
     frame.addEventListener('load', () => {
       loading.classList.add('hidden');
@@ -100,7 +99,7 @@
       }, 300);
     });
 
-    // Safety timeout in case the page is slow or blocked
+    // Safety timeout
     setTimeout(() => {
       loading.classList.add('hidden');
       setTimeout(() => {
@@ -109,39 +108,36 @@
     }, 7000);
   </script>
 
-  <!-- GU Assistant Pro Clean Widget -->
+  <!-- DGC Assistant Widget -->
 
-<style>
-  /* Hide label */
-  .gu-widget-label,
-  [class*="label"] {
-    display: none !important;
-  }
+  <style>
+    .gu-widget-label,
+    [class*="label"] {
+      display: none !important;
+    }
 
-  /* Remove button UI completely */
-  .gu-widget-button,
-  [class*="button"] {
-    all: unset !important;
-  }
+    .gu-widget-button,
+    [class*="button"] {
+      all: unset !important;
+    }
 
-  /* Make only GIF visible & clickable */
-  .gu-widget-button img,
-  [class*="button"] img {
-    width: 60px !important;
-    height: 60px !important;
-    border-radius: 50% !important;
-    object-fit: cover !important;
-    cursor: pointer !important;
-    display: block !important;
-  }
-</style>
+    .gu-widget-button img,
+    [class*="button"] img {
+      width: 60px !important;
+      height: 60px !important;
+      border-radius: 50% !important;
+      object-fit: cover !important;
+      cursor: pointer !important;
+      display: block !important;
+    }
+  </style>
 
-<script src="https://gu-assistant.vercel.app/widget.js"
-        data-src="https://gu-assistant.vercel.app"
-        data-avatar="https://gu-assistant.vercel.app/avatar.gif"
-        data-accent="#6f3df0"
-        data-label=""
-        async>
-</script>
+  <script src="https://gu-assistant.vercel.app/widget.js"
+          data-src="https://gu-assistant.vercel.app"
+          data-avatar="https://gu-assistant.vercel.app/avatar.gif"
+          data-accent="#6f3df0"
+          data-label=""
+          async>
+  </script>
 </body>
 </html>

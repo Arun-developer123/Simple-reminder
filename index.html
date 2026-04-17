@@ -1,143 +1,435 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DGC Gurugram</title>
-  <meta name="description" content="DGC Gurugram portal view." />
-  <style>
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #ffffff;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Building2,
+  ChevronRight,
+  Clock3,
+  Globe2,
+  Headphones,
+  Layers3,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Truck,
+  Users,
+} from "lucide-react";
 
-    .app {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #fff;
-    }
+export const metadata: Metadata = {
+  title: "First Mall | India’s B2B Marketplace for Buyers & Suppliers",
+  description:
+    "Modern, SEO-friendly homepage for First Mall — a B2B marketplace connecting buyers with suppliers, featuring construction industry categories, trusted services, and seller onboarding.",
+  keywords: [
+    "First Mall",
+    "B2B marketplace",
+    "buy and sell online",
+    "construction industry suppliers",
+    "vendors",
+    "buyers",
+    "India marketplace",
+  ],
+  openGraph: {
+    title: "First Mall | B2B Marketplace",
+    description:
+      "Connect buyers with suppliers, explore industry categories, and grow your business on First Mall.",
+    type: "website",
+  },
+};
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: #fff;
-    }
+const industryCategories = [
+  "Architects",
+  "Structure",
+  "Electrical",
+  "Plumbing",
+  "Mechanical",
+  "Fire Safety",
+  "Interior Designer",
+  "Landscape",
+  "Civil",
+  "Consultants",
+  "Contractors",
+  "Materials",
+];
 
-    .loading {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffff;
-      z-index: 5;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
+const featureCards = [
+  {
+    icon: ShieldCheck,
+    title: "Trusted marketplace",
+    desc: "Built for serious business users who want verified connections and reliable service.",
+  },
+  {
+    icon: Search,
+    title: "Find faster",
+    desc: "Search suppliers, services, and industry categories with a clean buying flow.",
+  },
+  {
+    icon: Truck,
+    title: "Order-ready experience",
+    desc: "Designed to move visitors from discovery to enquiry with less friction.",
+  },
+  {
+    icon: Headphones,
+    title: "Support-led onboarding",
+    desc: "Make seller registration and help access visible from the first screen.",
+  },
+];
 
-    .loading.hidden {
-      opacity: 0;
-    }
+const stats = [
+  { value: "40+", label: "years of trust" },
+  { value: "1000s", label: "of buyers to reach" },
+  { value: "24/7", label: "business visibility" },
+  { value: "1", label: "simple launch-ready homepage" },
+];
 
-    .loading-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      color: #0f172a;
-      font-weight: 600;
-      font-size: 14px;
-    }
+const steps = [
+  {
+    step: "01",
+    title: "Discover",
+    text: "Explore categories and quickly understand what First Mall offers.",
+  },
+  {
+    step: "02",
+    title: "Connect",
+    text: "Use clear CTAs for buyer enquiries, seller onboarding, and support.",
+  },
+  {
+    step: "03",
+    title: "Grow",
+    text: "Convert visitors into leads with an easy, professional marketplace flow.",
+  },
+];
 
-    .spinner {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: 3px solid rgba(15, 23, 42, 0.12);
-      border-top-color: #6f3df0;
-      animation: spin 0.9s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <div id="loading" class="loading">
-      <div class="loading-card">
-        <div class="spinner"></div>
-        <div>Loading DGC Gurugram…</div>
+export default function Page() {
+  return (
+    <main className="min-h-screen bg-[#07111f] text-white antialiased">
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute left-1/2 top-[-8rem] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
+        <div className="absolute right-[-6rem] top-[10rem] h-[22rem] w-[22rem] rounded-full bg-indigo-500/20 blur-3xl" />
+        <div className="absolute bottom-[-8rem] left-[-6rem] h-[22rem] w-[22rem] rounded-full bg-emerald-500/10 blur-3xl" />
       </div>
-    </div>
 
-    <iframe
-      id="dgcFrame"
-      src="https://dgcgurugram.ac.in"
-      title="DGC Gurugram"
-      referrerpolicy="no-referrer"
-    ></iframe>
-  </div>
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#07111f]/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Link href="#home" className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/20">
+              <Building2 className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <div className="text-lg font-semibold leading-none">First Mall</div>
+              <div className="text-xs text-white/60">B2B Marketplace</div>
+            </div>
+          </Link>
 
-  <script>
-    const loading = document.getElementById('loading');
-    const frame = document.getElementById('dgcFrame');
+          <nav className="hidden items-center gap-8 md:flex">
+            <a href="#features" className="text-sm text-white/75 transition hover:text-white">
+              Features
+            </a>
+            <a href="#categories" className="text-sm text-white/75 transition hover:text-white">
+              Categories
+            </a>
+            <a href="#process" className="text-sm text-white/75 transition hover:text-white">
+              How it works
+            </a>
+            <a href="#contact" className="text-sm text-white/75 transition hover:text-white">
+              Contact
+            </a>
+          </nav>
 
-    frame.addEventListener('load', () => {
-      loading.classList.add('hidden');
-      setTimeout(() => {
-        loading.style.display = 'none';
-      }, 300);
-    });
+          <div className="flex items-center gap-3">
+            <a
+              href="#contact"
+              className="hidden rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/85 transition hover:border-white/30 hover:bg-white/5 sm:inline-flex"
+            >
+              Seller Support
+            </a>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]"
+            >
+              Get Started <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </header>
 
-    // Safety timeout
-    setTimeout(() => {
-      loading.classList.add('hidden');
-      setTimeout(() => {
-        loading.style.display = 'none';
-      }, 300);
-    }, 7000);
-  </script>
+      <section id="home" className="relative mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pb-28 lg:pt-16">
+        <div className="grid items-center gap-14 lg:grid-cols-2">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-100">
+              <Sparkles className="h-4 w-4" />
+              Modern B2B marketplace experience
+            </div>
 
-  <!-- DGC Assistant Widget -->
+            <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Connect buyers with suppliers in a sharper, faster, premium-first experience.
+            </h1>
 
-  <style>
-    .gu-widget-label,
-    [class*="label"] {
-      display: none !important;
-    }
+            <p className="mt-6 max-w-2xl text-base leading-8 text-white/72 sm:text-lg">
+              First Mall is positioned as a B2B marketplace with trusted services, strong category discovery, and a simple path for buyers and sellers to connect.
+              This homepage upgrades that story into a modern, SEO-friendly landing page built for leads.
+            </p>
 
-    .gu-widget-button,
-    [class*="button"] {
-      all: unset !important;
-    }
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="#categories"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:scale-[1.01]"
+              >
+                Explore categories <ChevronRight className="h-4 w-4" />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/10"
+              >
+                Sell with us <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
 
-    .gu-widget-button img,
-    [class*="button"] img {
-      width: 60px !important;
-      height: 60px !important;
-      border-radius: 50% !important;
-      object-fit: cover !important;
-      cursor: pointer !important;
-      display: block !important;
-    }
-  </style>
+            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {stats.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg shadow-black/10"
+                >
+                  <div className="text-2xl font-semibold text-white">{item.value}</div>
+                  <div className="mt-1 text-xs uppercase tracking-[0.18em] text-white/55">{item.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-  <script src="https://gu-assistant.vercel.app/widget.js"
-          data-src="https://gu-assistant.vercel.app"
-          data-avatar="https://gu-assistant.vercel.app/avatar.gif"
-          data-accent="#6f3df0"
-          data-label=""
-          async>
-  </script>
-</body>
-</html>
+          <div className="relative">
+            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-cyan-400/20 via-white/5 to-indigo-500/20 blur-2xl" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/6 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-7">
+              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#0b1728] p-4">
+                <div>
+                  <div className="text-sm text-white/60">Homepage spotlight</div>
+                  <div className="mt-1 text-xl font-semibold">Business-first marketplace</div>
+                </div>
+                <div className="rounded-2xl bg-emerald-500/15 px-3 py-2 text-sm font-medium text-emerald-300">
+                  Live
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-4 md:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-[#0b1728] p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-xl bg-cyan-400/15 p-2 text-cyan-300">
+                      <Users className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-white/60">Buyer reach</div>
+                      <div className="font-semibold">Thousands of buyers</div>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-white/65">
+                    Make the marketplace value obvious above the fold so visitors instantly understand why the platform exists.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-[#0b1728] p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-xl bg-indigo-400/15 p-2 text-indigo-300">
+                      <BadgeCheck className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-white/60">Trust signal</div>
+                      <div className="font-semibold">40+ years of trust</div>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-white/65">
+                    Reassurance matters in B2B. Put legacy, support, and reliability in the main conversion path.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 rounded-2xl border border-white/10 bg-[#0b1728] p-5">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-sm text-white/75">
+                    <Globe2 className="h-4 w-4" /> India-focused marketplace
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-sm text-white/75">
+                    <Layers3 className="h-4 w-4" /> Multi-category discovery
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-sm text-white/75">
+                    <Clock3 className="h-4 w-4" /> Fast enquiry flow
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300/80">Why this redesign works</p>
+            <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Clearer messaging, stronger trust, better conversions</h2>
+          </div>
+          <p className="max-w-2xl text-sm leading-7 text-white/65">
+            The site structure emphasizes the marketplace promise, the long-standing trust claim, and seller onboarding so the homepage does real business work.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {featureCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div key={card.title} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/10 backdrop-blur">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-white">{card.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-white/65">{card.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="categories" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300/80">Categories</p>
+            <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">
+              Construction industry categories presented with premium clarity
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/65">
+              The indexed site already points to construction-related categories. This section turns that into a modern discovery grid that feels complete and useful.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+              {industryCategories.map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-white/10 bg-[#0b1728] px-4 py-4 text-sm font-medium text-white/80 transition hover:border-cyan-400/30 hover:bg-cyan-400/5"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/10 backdrop-blur">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-emerald-500/15 p-3 text-emerald-300">
+                <Star className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="text-sm text-white/55">Positioning</div>
+                <div className="text-lg font-semibold">India’s online B2B marketplace</div>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-4 text-sm leading-7 text-white/68">
+              <p>
+                The current public snippets describe First Mall as an online B2B marketplace connecting buyers with suppliers, and also mention a long trust story.
+              </p>
+              <p>
+                The redesign makes that clear immediately, then pushes visitors toward category browsing, seller enquiries, and support.
+              </p>
+              <p>
+                A stronger homepage like this also helps the rest of the site feel intentional when subpages are added later.
+              </p>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-[#0b1728] p-4 text-sm text-white/70">
+              <div className="font-medium text-white">Support line from indexed snippet</div>
+              <div className="mt-1">Do you need any help? Call: +91-9868888330</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="process" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <div className="mb-8">
+          <p className="text-sm uppercase tracking-[0.2em] text-cyan-300/80">How it works</p>
+          <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">Built for easy understanding at first glance</h2>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-3">
+          {steps.map((item) => (
+            <div key={item.step} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/10">
+              <div className="text-sm font-semibold tracking-[0.2em] text-cyan-300/80">{item.step}</div>
+              <h3 className="mt-3 text-2xl font-semibold text-white">{item.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-white/65">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="contact" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
+        <div className="overflow-hidden rounded-[2.25rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-8 shadow-2xl shadow-black/20 backdrop-blur lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-cyan-300/80">Seller onboarding</p>
+              <h2 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">
+                Turn the homepage into a lead-generating entry point.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/70">
+                The indexed site already includes seller/vendor registration language. This block makes that journey obvious and action-driven, with support and enquiry CTAs placed where users expect them.
+              </p>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="tel:+919868888330"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:scale-[1.01]"
+                >
+                  Call support <ArrowRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="#home"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  Back to top <ChevronRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+
+            <div className="grid gap-4 rounded-[1.75rem] border border-white/10 bg-[#0b1728] p-6">
+              <div className="flex items-center gap-3">
+                <div className="rounded-2xl bg-cyan-400/15 p-3 text-cyan-300">
+                  <Users className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm text-white/55">For sellers</div>
+                  <div className="text-lg font-semibold">Reach more customers</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="rounded-2xl bg-indigo-400/15 p-3 text-indigo-300">
+                  <Search className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm text-white/55">For buyers</div>
+                  <div className="text-lg font-semibold">Find the right supplier</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="rounded-2xl bg-emerald-500/15 p-3 text-emerald-300">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm text-white/55">For trust</div>
+                  <div className="text-lg font-semibold">Look professional instantly</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-white/10 bg-black/10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-white/55 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+          <p>© {new Date().getFullYear()} First Mall. All rights reserved.</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <span>Privacy Policy</span>
+            <span>Terms &amp; Conditions</span>
+            <span>Refund &amp; Cancellation</span>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}
